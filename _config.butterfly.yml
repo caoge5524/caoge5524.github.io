@@ -1,0 +1,226 @@
+# Butterfly overrides. Theme defaults remain in node_modules and must not be edited.
+
+nav:
+  display_title: true
+  display_post_title: true
+  fixed: true
+
+menu:
+  首页: / || fas fa-home
+  文章: /archives/ || fas fa-archive
+  分类: /categories/ || fas fa-folder-open
+  标签: /tags/ || fas fa-tags
+  关于: /about/ || fas fa-user
+
+social:
+  fab fa-github: https://github.com/caoge5524 || GitHub || '#24292f'
+
+favicon: /img/favicon.ico
+avatar:
+  img: /img/avatar-placeholder.png
+  effect: false
+
+default_top_img: /img/hero.jpg
+index_img: /img/hero.jpg
+archive_img: /img/hero.jpg
+tag_img: /img/hero.jpg
+category_img: /img/hero.jpg
+background: '#f4f7f5'
+footer_img: false
+
+cover:
+  index_enable: true
+  aside_enable: true
+  archives_enable: true
+  default_cover:
+    - /img/hero.jpg
+
+index_site_info_top: 43%
+index_top_img_height: 92vh
+subtitle:
+  enable: true
+  effect: true
+  source: false
+  sub:
+    - 记录技术、思考与生活
+    - 保持好奇，持续创造
+
+index_layout: 3
+index_post_content:
+  method: 2
+  length: 220
+
+post_meta:
+  page:
+    date_type: created
+    date_format: date
+    categories: true
+    tags: true
+    label: true
+  post:
+    position: left
+    date_type: both
+    date_format: date
+    categories: true
+    tags: true
+    label: true
+
+toc:
+  post: true
+  page: false
+  number: true
+  expand: false
+  style_simple: false
+  scroll_percent: true
+
+post_copyright:
+  enable: true
+  decode: false
+  author_href: https://github.com/caoge5524
+  license: CC BY-NC-SA 4.0
+  license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+footer:
+  owner:
+    enable: true
+    since: 2026
+  copyright:
+    enable: true
+    version: true
+  custom_text: '写作是对思考的第二次整理。'
+
+aside:
+  enable: true
+  hide: false
+  button: true
+  mobile: true
+  position: right
+  display:
+    archive: true
+    tag: true
+    category: true
+  card_author:
+    enable: true
+    description: '记录技术、思考与生活'
+    button:
+      enable: true
+      icon: fab fa-github
+      text: GitHub
+      link: https://github.com/caoge5524
+  card_announcement:
+    enable: true
+    content: '欢迎来到我的数字花园。'
+  card_recent_post:
+    enable: true
+    limit: 5
+    sort: date
+  card_categories:
+    enable: true
+    limit: 8
+    expand: none
+  card_tags:
+    enable: true
+    limit: 30
+    color: true
+    orderby: name
+    order: 1
+  card_archives:
+    enable: true
+    type: monthly
+    format: YYYY年MM月
+    order: -1
+    limit: 8
+  card_webinfo:
+    enable: true
+    post_count: true
+    last_push_date: true
+    runtime_date: 2026/08/08 00:00:00
+
+search:
+  use: local_search
+  placeholder: 搜索文章
+  local_search:
+    preload: false
+    top_n_per_article: 1
+    unescape: true
+    pagination:
+      enable: false
+      hitsPerPage: 8
+
+readmode: true
+darkmode:
+  enable: true
+  button: true
+  autoChangeMode: false
+rightside_scroll_percent: true
+rightside_config_animation: false
+
+code_blocks:
+  theme: light
+  macStyle: true
+  height_limit: 360
+  word_wrap: false
+  copy: true
+  language: true
+  shrink: false
+
+copy:
+  enable: true
+  copyright:
+    enable: true
+    limit_count: 150
+
+busuanzi:
+  site_uv: true
+  site_pv: true
+  page_pv: true
+
+preloader:
+  enable: true
+  source: 1
+enter_transitions: true
+display_mode: light
+lightbox: medium_zoom
+pjax:
+  enable: true
+  exclude:
+    - /music/
+snackbar:
+  enable: true
+  position: bottom-left
+  bg_light: '#2f786f'
+  bg_dark: '#1d5d57'
+instantpage: true
+lazyload:
+  enable: true
+  native: true
+  field: site
+
+theme_color:
+  enable: true
+  main: '#2f786f'
+  paginator: '#d2694c'
+  button_hover: '#d2694c'
+  text_selection: '#d2694c'
+  link_color: '#2f786f'
+  meta_color: '#68756f'
+  hr_color: '#a8b7b0'
+  code_foreground: '#2d3834'
+  code_background: 'rgba(233, 239, 236, .92)'
+  toc_color: '#2f786f'
+  blockquote_padding_color: '#2f786f'
+  blockquote_background_color: 'rgba(47, 120, 111, .08)'
+  scrollbar_color: '#2f786f'
+
+rounded_corners_ui: true
+mask:
+  header: true
+  footer: false
+
+inject:
+  head:
+    - <link rel="stylesheet" href="/css/custom.css">
+  bottom:
+    - <script src="/js/site-config.js"></script>
+    - <script src="/js/media-player.js"></script>
+    - <script src="/js/custom.js"></script>

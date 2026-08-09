@@ -68,7 +68,13 @@ backgroundVideo: {
 
 视频会静音循环播放并通过 `object-fit: cover` 固定铺满整个视口。`overlayOpacity` 控制文字与卡片后方的暗色遮罩，数值范围建议为 `0.2` 到 `0.55`。固定全屏和图层样式位于 [`source/css/custom.css`](source/css/custom.css) 的 `#blog-ambient-background` 区域。
 
-建议使用 H.264 编码、无音轨，并尽量压缩到 10 MB 左右。较大的视频建议使用对象存储/CDN 或 Git LFS，避免仓库体积持续增长。
+建议使用 H.264 编码、无音轨，并尽量压缩到 10 MB 左右。导出时必须启用 Web 优化（Fast Start），确保 `moov` 元数据位于文件开头，否则 GitHub Pages 会在下载完整视频前一直显示静态海报。已有 MP4 可无损处理：
+
+```bash
+ffmpeg -i input.mp4 -map 0 -c copy -movflags +faststart output.mp4
+```
+
+较大的视频建议使用对象存储/CDN 或 Git LFS，避免仓库体积持续增长。
 
 ## 背景粒子
 
@@ -82,11 +88,15 @@ particles: {
   color: 'rgba(255, 255, 255, 0.72)',
   linkColor: 'rgba(184, 225, 214, 0.24)',
   maxDistance: 128,   // 粒子连线的最大距离
-  speed: 0.22
+  speed: 0.22,
+  mouseInteraction: true,
+  mouseDistance: 190, // 鼠标影响半径
+  mouseForce: 0.85,   // 粒子向鼠标聚拢的强度
+  trailLength: 18     // 鼠标尾迹粒子数量
 }
 ```
 
-需要纯视频背景时，将 `particles.enabled` 改为 `false`。系统启用“减少动态效果”时，粒子动画与视频自动播放会自动停用。
+需要纯视频背景时，将 `particles.enabled` 改为 `false`；只关闭鼠标跟随时，将 `mouseInteraction` 改为 `false`。系统启用“减少动态效果”时，粒子动画与视频自动播放会自动停用。
 
 ## 背景音乐
 

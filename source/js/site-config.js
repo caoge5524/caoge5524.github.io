@@ -17,7 +17,11 @@ window.BLOG_CONFIG = {
     color: 'rgba(255, 255, 255, 0.72)',
     linkColor: 'rgba(184, 225, 214, 0.24)',
     maxDistance: 128,
-    speed: 0.22
+    speed: 0.22,
+    mouseInteraction: true,
+    mouseDistance: 190,
+    mouseForce: 0.85,
+    trailLength: 18
   },
   music: {
     enabled: true,

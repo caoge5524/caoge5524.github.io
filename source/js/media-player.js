@@ -50,7 +50,9 @@
     let width = 0
     let height = 0
     let particles = []
+    let trails = []
     let animationFrame = 0
+    const pointer = { x: 0, y: 0, active: false }
     const isMobile = () => window.matchMedia('(max-width: 768px)').matches
 
     const createParticle = () => {
@@ -86,6 +88,18 @@
       context.fillStyle = particleConfig.color || 'rgba(255, 255, 255, 0.72)'
 
       particles.forEach(particle => {
+        if (pointer.active && particleConfig.mouseInteraction !== false) {
+          const pointerX = pointer.x - particle.x
+          const pointerY = pointer.y - particle.y
+          const pointerDistance = Math.hypot(pointerX, pointerY)
+          const interactionDistance = particleConfig.mouseDistance ?? 190
+          if (pointerDistance > 0 && pointerDistance < interactionDistance) {
+            const attraction = (1 - pointerDistance / interactionDistance) * (particleConfig.mouseForce ?? 0.85)
+            particle.x += pointerX / pointerDistance * attraction
+            particle.y += pointerY / pointerDistance * attraction
+          }
+        }
+
         particle.x += particle.vx
         particle.y += particle.vy
         if (particle.x < -5) particle.x = width + 5
@@ -114,6 +128,35 @@
         }
       }
       context.globalAlpha = 1
+
+      trails = trails.filter(trail => trail.life > 0)
+      trails.forEach(trail => {
+        trail.x += trail.vx
+        trail.y += trail.vy
+        trail.life -= 1
+        context.globalAlpha = trail.life / trail.maxLife
+        context.fillStyle = particleConfig.color || 'rgba(255, 255, 255, 0.72)'
+        context.beginPath()
+        context.arc(trail.x, trail.y, trail.radius, 0, Math.PI * 2)
+        context.fill()
+      })
+      context.globalAlpha = 1
+
+      if (pointer.active && particleConfig.mouseInteraction !== false) {
+        const interactionDistance = particleConfig.mouseDistance ?? 190
+        context.strokeStyle = particleConfig.linkColor || 'rgba(184, 225, 214, 0.24)'
+        particles.forEach(particle => {
+          const distance = Math.hypot(pointer.x - particle.x, pointer.y - particle.y)
+          if (distance >= interactionDistance) return
+          context.globalAlpha = 0.9 * (1 - distance / interactionDistance)
+          context.beginPath()
+          context.moveTo(pointer.x, pointer.y)
+          context.lineTo(particle.x, particle.y)
+          context.stroke()
+        })
+        context.globalAlpha = 1
+      }
+
       animationFrame = requestAnimationFrame(draw)
     }
 
@@ -122,9 +165,41 @@
       if (!document.hidden) draw()
     }
 
+    const handlePointerMove = event => {
+      if (event.pointerType && event.pointerType !== 'mouse') return
+      pointer.x = event.clientX
+      pointer.y = event.clientY
+      pointer.active = true
+
+      const trailLength = particleConfig.trailLength ?? 18
+      const newTrail = Array.from({ length: 2 }, () => {
+        const angle = Math.random() * Math.PI * 2
+        const drift = 0.15 + Math.random() * 0.35
+        const life = 18 + Math.round(Math.random() * 16)
+        return {
+          x: pointer.x + (Math.random() - 0.5) * 8,
+          y: pointer.y + (Math.random() - 0.5) * 8,
+          vx: Math.cos(angle) * drift,
+          vy: Math.sin(angle) * drift,
+          radius: 0.8 + Math.random() * 1.5,
+          life,
+          maxLife: life
+        }
+      })
+      trails.push(...newTrail)
+      if (trails.length > trailLength) trails.splice(0, trails.length - trailLength)
+    }
+
+    const handlePointerLeave = () => {
+      pointer.active = false
+    }
+
     resize()
     draw()
     window.addEventListener('resize', resize, { passive: true })
+    window.addEventListener('pointermove', handlePointerMove, { passive: true })
+    document.documentElement.addEventListener('pointerleave', handlePointerLeave)
+    window.addEventListener('blur', handlePointerLeave)
     document.addEventListener('visibilitychange', handleVisibility)
   }
 

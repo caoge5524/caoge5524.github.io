@@ -1,26 +1,131 @@
 (() => {
   const config = window.BLOG_CONFIG || {}
 
+  const getBackgroundLayer = () => {
+    let layer = document.getElementById('blog-ambient-background')
+    if (layer) return layer
+
+    layer = document.createElement('div')
+    layer.id = 'blog-ambient-background'
+    layer.setAttribute('aria-hidden', 'true')
+    layer.innerHTML = `
+      <video id="blog-background-video" muted loop playsinline></video>
+      <div id="blog-background-overlay"></div>
+      <canvas id="blog-particle-canvas"></canvas>
+    `
+    document.body.prepend(layer)
+    return layer
+  }
+
   const setupBackgroundVideo = () => {
     const videoConfig = config.backgroundVideo
     if (!videoConfig || !videoConfig.enabled || !videoConfig.src) return
 
-    let video = document.getElementById('blog-background-video')
-    if (!video) {
-      video = document.createElement('video')
-      video.id = 'blog-background-video'
-      video.autoplay = true
-      video.muted = true
-      video.loop = true
-      video.playsInline = true
-      video.setAttribute('aria-hidden', 'true')
-      document.body.prepend(video)
-    }
+    const layer = getBackgroundLayer()
+    const video = layer.querySelector('#blog-background-video')
+    const overlay = layer.querySelector('#blog-background-overlay')
 
     video.poster = videoConfig.poster || ''
+    video.playbackRate = Math.min(2, Math.max(0.25, videoConfig.playbackRate || 1))
+    overlay.style.backgroundColor = `rgba(12, 22, 20, ${Math.min(0.85, Math.max(0, videoConfig.overlayOpacity ?? 0.32))})`
     if (video.src !== new URL(videoConfig.src, location.href).href) {
       video.src = videoConfig.src
     }
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      video.play().catch(() => {})
+    }
+  }
+
+  const setupParticles = () => {
+    const particleConfig = config.particles
+    if (!particleConfig?.enabled || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const canvas = getBackgroundLayer().querySelector('#blog-particle-canvas')
+    if (canvas.dataset.ready) return
+    canvas.dataset.ready = 'true'
+
+    const context = canvas.getContext('2d')
+    if (!context) return
+
+    let width = 0
+    let height = 0
+    let particles = []
+    let animationFrame = 0
+    const isMobile = () => window.matchMedia('(max-width: 768px)').matches
+
+    const createParticle = () => {
+      const angle = Math.random() * Math.PI * 2
+      const speed = (0.35 + Math.random() * 0.65) * (particleConfig.speed ?? 0.22)
+      return {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: 0.8 + Math.random() * 1.6,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed
+      }
+    }
+
+    const resize = () => {
+      width = window.innerWidth
+      height = window.innerHeight
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2)
+      canvas.width = Math.round(width * pixelRatio)
+      canvas.height = Math.round(height * pixelRatio)
+      canvas.style.width = `${width}px`
+      canvas.style.height = `${height}px`
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
+
+      const targetCount = isMobile()
+        ? (particleConfig.mobileCount ?? 34)
+        : (particleConfig.count ?? 62)
+      particles = Array.from({ length: targetCount }, createParticle)
+    }
+
+    const draw = () => {
+      context.clearRect(0, 0, width, height)
+      context.fillStyle = particleConfig.color || 'rgba(255, 255, 255, 0.72)'
+
+      particles.forEach(particle => {
+        particle.x += particle.vx
+        particle.y += particle.vy
+        if (particle.x < -5) particle.x = width + 5
+        if (particle.x > width + 5) particle.x = -5
+        if (particle.y < -5) particle.y = height + 5
+        if (particle.y > height + 5) particle.y = -5
+
+        context.beginPath()
+        context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2)
+        context.fill()
+      })
+
+      const maxDistance = particleConfig.maxDistance ?? 128
+      context.strokeStyle = particleConfig.linkColor || 'rgba(184, 225, 214, 0.24)'
+      for (let i = 0; i < particles.length; i += 1) {
+        for (let j = i + 1; j < particles.length; j += 1) {
+          const dx = particles[i].x - particles[j].x
+          const dy = particles[i].y - particles[j].y
+          const distance = Math.hypot(dx, dy)
+          if (distance >= maxDistance) continue
+          context.globalAlpha = 1 - distance / maxDistance
+          context.beginPath()
+          context.moveTo(particles[i].x, particles[i].y)
+          context.lineTo(particles[j].x, particles[j].y)
+          context.stroke()
+        }
+      }
+      context.globalAlpha = 1
+      animationFrame = requestAnimationFrame(draw)
+    }
+
+    const handleVisibility = () => {
+      cancelAnimationFrame(animationFrame)
+      if (!document.hidden) draw()
+    }
+
+    resize()
+    draw()
+    window.addEventListener('resize', resize, { passive: true })
+    document.addEventListener('visibilitychange', handleVisibility)
   }
 
   const setupMusicPlayer = () => {
@@ -92,6 +197,7 @@
 
   const init = () => {
     setupBackgroundVideo()
+    setupParticles()
     setupMusicPlayer()
   }
 

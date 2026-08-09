@@ -4,25 +4,36 @@
  */
 window.BLOG_CONFIG = {
   backgroundVideo: {
-    enabled: false,
-    src: '/media/background.mp4',
-    poster: '/img/hero.jpg'
+    enabled: true,
+    src: '/media/椎名真昼4k_120fps.mp4',
+    poster: '/img/hero.jpg',
+    playbackRate: 1,
+    overlayOpacity: 0.32
+  },
+  particles: {
+    enabled: true,
+    count: 62,
+    mobileCount: 34,
+    color: 'rgba(255, 255, 255, 0.72)',
+    linkColor: 'rgba(184, 225, 214, 0.24)',
+    maxDistance: 128,
+    speed: 0.22
   },
   music: {
-    enabled: false,
+    enabled: true,
     autoplay: false,
     volume: 0.55,
     tracks: [
       {
-        title: '示例曲目',
-        artist: '请替换音乐文件',
-        src: '/media/music/example.mp3',
+        title: '20-Travelers',
+        artist: 'OUTER WILDS',
+        src: '/media/music/20 - Travelers.mp3',
         cover: '/img/music-cover-placeholder.png'
       }
     ]
   },
   clickText: {
     enabled: true,
-    words: ['保持好奇', '持续创造', '认真记录']
+    words: ['We', 'are', 'Falcons']
   }
 }

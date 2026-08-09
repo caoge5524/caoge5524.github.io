@@ -41,8 +41,8 @@ npm run build
 | 导航、头像、首屏、侧栏、搜索、主题功能 | [`_config.butterfly.yml`](_config.butterfly.yml) | Butterfly 的所有覆盖配置 |
 | GitHub 与社交链接 | [`_config.butterfly.yml`](_config.butterfly.yml) | `social`、`aside.card_author.button` |
 | 主色、卡片、导航、播放器样式 | [`source/css/custom.css`](source/css/custom.css) | CSS 变量与对应组件样式 |
-| 背景视频、音乐、点击文字 | [`source/js/site-config.js`](source/js/site-config.js) | `BLOG_CONFIG` |
-| 媒体播放器逻辑 | [`source/js/media-player.js`](source/js/media-player.js) | 视频挂载、播放列表和控制按钮 |
+| 背景视频、粒子、音乐、点击文字 | [`source/js/site-config.js`](source/js/site-config.js) | `BLOG_CONFIG` 中的功能开关与参数 |
+| 动态背景与播放器逻辑 | [`source/js/media-player.js`](source/js/media-player.js) | 视频挂载、粒子画布、播放列表和控制按钮 |
 | 页面轻交互 | [`source/js/custom.js`](source/js/custom.js) | 点击文字与 PJAX 后初始化 |
 | 禁用 Jekyll 标记 | [`scripts/nojekyll.js`](scripts/nojekyll.js) | 构建后生成 `public/.nojekyll` |
 | 关于页面 | [`source/about/index.md`](source/about/index.md) | 个人介绍与联系方式 |
@@ -54,23 +54,43 @@ npm run build
 
 ## 背景视频
 
-1. 将视频放到 `source/media/background.mp4`，建议使用 H.264 编码、无音轨、控制在 10 MB 左右。
-2. 打开 [`source/js/site-config.js`](source/js/site-config.js)，将 `backgroundVideo.enabled` 改为 `true`。
-3. 可修改 `src` 和 `poster`。手机端会使用 `playsInline`，视频始终静音循环播放。
+当前已启用 `source/media/椎名真昼4k_120fps.mp4`。更换视频时，将文件放入 `source/media/`，然后修改 [`source/js/site-config.js`](source/js/site-config.js)：
 
 ```js
 backgroundVideo: {
   enabled: true,
   src: '/media/background.mp4',
-  poster: '/img/hero.jpg'
+  poster: '/img/hero.jpg',
+  playbackRate: 1,
+  overlayOpacity: 0.32
 }
 ```
 
-背景视频默认关闭。文件不存在时不要开启，否则浏览器会产生 404 请求。较大的视频建议使用对象存储/CDN，或使用 Git LFS，避免 GitHub 仓库体积持续增长。
+视频会静音循环播放并通过 `object-fit: cover` 固定铺满整个视口。`overlayOpacity` 控制文字与卡片后方的暗色遮罩，数值范围建议为 `0.2` 到 `0.55`。固定全屏和图层样式位于 [`source/css/custom.css`](source/css/custom.css) 的 `#blog-ambient-background` 区域。
+
+建议使用 H.264 编码、无音轨，并尽量压缩到 10 MB 左右。较大的视频建议使用对象存储/CDN 或 Git LFS，避免仓库体积持续增长。
+
+## 背景粒子
+
+粒子在独立 Canvas 中绘制，覆盖于视频与暗色遮罩之上，但不会接收鼠标事件或遮挡页面内容。所有参数位于 [`source/js/site-config.js`](source/js/site-config.js)：
+
+```js
+particles: {
+  enabled: true,
+  count: 62,          // 桌面端粒子数
+  mobileCount: 34,    // 手机端粒子数
+  color: 'rgba(255, 255, 255, 0.72)',
+  linkColor: 'rgba(184, 225, 214, 0.24)',
+  maxDistance: 128,   // 粒子连线的最大距离
+  speed: 0.22
+}
+```
+
+需要纯视频背景时，将 `particles.enabled` 改为 `false`。系统启用“减少动态效果”时，粒子动画与视频自动播放会自动停用。
 
 ## 背景音乐
 
-将音频放入 `source/media/music/`，然后在 [`source/js/site-config.js`](source/js/site-config.js) 中启用并编辑播放列表：
+当前已启用 `source/media/music/20 - Travelers.mp3`。更换或增加音乐时，将音频放入 `source/media/music/`，然后在 [`source/js/site-config.js`](source/js/site-config.js) 中编辑播放列表：
 
 ```js
 music: {

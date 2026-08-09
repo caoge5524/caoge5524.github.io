@@ -5,7 +5,7 @@
 window.BLOG_CONFIG = {
   backgroundVideo: {
     enabled: true,
-    src: '/media/椎名真昼4k_120fps.mp4',
+    src: '/media/background.mp4',
     poster: '/img/hero.jpg',
     playbackRate: 1,
     overlayOpacity: 0.32

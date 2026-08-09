@@ -219,8 +219,8 @@ mask:
 
 inject:
   head:
-    - <link rel="stylesheet" href="/css/custom.css">
+    - <link rel="stylesheet" href="/css/custom.css?v=20260809-2">
   bottom:
-    - <script src="/js/site-config.js"></script>
-    - <script src="/js/media-player.js"></script>
-    - <script src="/js/custom.js"></script>
+    - <script src="/js/site-config.js?v=20260809-2"></script>
+    - <script src="/js/media-player.js?v=20260809-2"></script>
+    - <script src="/js/custom.js?v=20260809-2"></script>

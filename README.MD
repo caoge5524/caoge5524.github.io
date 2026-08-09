@@ -54,7 +54,7 @@ npm run build
 
 ## 背景视频
 
-当前已启用 `source/media/椎名真昼4k_120fps.mp4`。更换视频时，将文件放入 `source/media/`，然后修改 [`source/js/site-config.js`](source/js/site-config.js)：
+当前已启用 `source/media/background.mp4`。更换视频时，将文件放入 `source/media/`，然后修改 [`source/js/site-config.js`](source/js/site-config.js)：
 
 ```js
 backgroundVideo: {

@@ -3,10 +3,14 @@
  * Replace media paths here after placing files in source/media/.
  */
 window.BLOG_CONFIG = {
-  backgroundVideo: {
+  backgroundImage: {
     enabled: true,
+    src: '/img/background.jpg?v=20260810-2'
+  },
+  backgroundVideo: {
+    enabled: false,
     src: '/media/background.mp4?v=20260810-1',
-    poster: '/img/hero.jpg',
+    poster: '/img/background.jpg?v=20260810-2',
     playbackRate: 1,
     overlayOpacity: 0.32
   },

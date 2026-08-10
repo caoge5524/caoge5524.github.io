@@ -17,14 +17,14 @@ social:
 
 favicon: /img/favicon.ico
 avatar:
-  img: /img/avatar-placeholder.png
+  img: /img/avatar-placeholder.jpg
   effect: false
 
-default_top_img: /img/hero.jpg
-index_img: /img/hero.jpg
-archive_img: /img/hero.jpg
-tag_img: /img/hero.jpg
-category_img: /img/hero.jpg
+default_top_img: /img/background.jpg
+index_img: /img/background.jpg
+archive_img: /img/background.jpg
+tag_img: /img/background.jpg
+category_img: /img/background.jpg
 background: '#f4f7f5'
 footer_img: false
 
@@ -33,7 +33,7 @@ cover:
   aside_enable: true
   archives_enable: true
   default_cover:
-    - /img/hero.jpg
+    - /img/background.jpg
 
 index_site_info_top: 43%
 index_top_img_height: 92vh

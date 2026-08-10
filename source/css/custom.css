@@ -37,7 +37,7 @@ body {
   overflow: hidden;
   width: 100vw;
   height: 100vh;
-  background: #101815 url('/img/hero.jpg') center / cover no-repeat;
+  background: #101815 url('/img/background.jpg') center / cover no-repeat;
   pointer-events: none;
 }
 
@@ -88,6 +88,11 @@ body {
   font-family: Georgia, 'Noto Serif SC', serif;
   font-weight: 600;
   letter-spacing: 0;
+}
+
+#aside-content .avatar-img img,
+#sidebar-menus .avatar-img img {
+  border-radius: 50%;
 }
 
 #nav {

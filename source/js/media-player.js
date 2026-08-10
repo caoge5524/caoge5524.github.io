@@ -17,17 +17,31 @@
     return layer
   }
 
+  const setupBackgroundOverlay = () => {
+    const overlay = getBackgroundLayer().querySelector('#blog-background-overlay')
+    const opacity = config.backgroundVideo?.overlayOpacity ?? 0.32
+    overlay.style.backgroundColor = `rgba(12, 22, 20, ${Math.min(0.85, Math.max(0, opacity))})`
+  }
+
+  const setupBackgroundImage = () => {
+    const imageConfig = config.backgroundImage
+    if (!imageConfig?.enabled || !imageConfig.src) return
+
+    const layer = getBackgroundLayer()
+    layer.style.backgroundImage = `url("${imageConfig.src}")`
+    setupBackgroundOverlay()
+  }
+
   const setupBackgroundVideo = () => {
     const videoConfig = config.backgroundVideo
     if (!videoConfig || !videoConfig.enabled || !videoConfig.src) return
 
     const layer = getBackgroundLayer()
     const video = layer.querySelector('#blog-background-video')
-    const overlay = layer.querySelector('#blog-background-overlay')
 
     video.poster = videoConfig.poster || ''
     video.playbackRate = Math.min(2, Math.max(0.25, videoConfig.playbackRate || 1))
-    overlay.style.backgroundColor = `rgba(12, 22, 20, ${Math.min(0.85, Math.max(0, videoConfig.overlayOpacity ?? 0.32))})`
+    setupBackgroundOverlay()
     if (video.src !== new URL(videoConfig.src, location.href).href) {
       video.src = videoConfig.src
     }
@@ -271,6 +285,7 @@
   }
 
   const init = () => {
+    setupBackgroundImage()
     setupBackgroundVideo()
     setupParticles()
     setupMusicPlayer()

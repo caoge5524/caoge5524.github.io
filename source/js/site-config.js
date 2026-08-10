@@ -5,7 +5,7 @@
 window.BLOG_CONFIG = {
   backgroundVideo: {
     enabled: true,
-    src: '/media/background.mp4',
+    src: '/media/background.mp4?v=20260810-1',
     poster: '/img/hero.jpg',
     playbackRate: 1,
     overlayOpacity: 0.32
@@ -31,7 +31,7 @@ window.BLOG_CONFIG = {
       {
         title: '20-Travelers',
         artist: 'OUTER WILDS',
-        src: '/media/music/20 - Travelers.mp3',
+        src: '/media/music/20 - Travelers.mp3?v=20260810-1',
         cover: '/img/music-cover-placeholder.png'
       }
     ]

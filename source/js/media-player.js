@@ -11,6 +11,7 @@
     layer.innerHTML = `
       <video id="blog-background-video" muted loop playsinline></video>
       <div id="blog-background-overlay"></div>
+      <div id="blog-video-transition"></div>
       <canvas id="blog-particle-canvas"></canvas>
     `
     document.body.prepend(layer)
@@ -39,12 +40,42 @@
     const layer = getBackgroundLayer()
     const video = layer.querySelector('#blog-background-video')
 
+    const revealVideo = () => {
+      if (layer.classList.contains('is-video-ready') || layer.dataset.revealPending) return
+      layer.dataset.revealPending = 'true'
+
+      const startTransition = () => {
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        layer.classList.add('is-video-transitioning')
+        window.setTimeout(() => layer.classList.add('is-video-ready'), reducedMotion ? 0 : 360)
+        window.setTimeout(() => {
+          layer.classList.remove('is-video-transitioning')
+          delete layer.dataset.revealPending
+        }, reducedMotion ? 20 : 1250)
+      }
+
+      const loadingBox = document.getElementById('loading-box')
+      if (!loadingBox || loadingBox.classList.contains('loaded')) {
+        window.setTimeout(startTransition, loadingBox ? 650 : 80)
+        return
+      }
+
+      const observer = new MutationObserver(() => {
+        if (!loadingBox.classList.contains('loaded')) return
+        observer.disconnect()
+        window.setTimeout(startTransition, 650)
+      })
+      observer.observe(loadingBox, { attributes: true, attributeFilter: ['class'] })
+    }
+
     video.poster = videoConfig.poster || ''
     video.playbackRate = Math.min(2, Math.max(0.25, videoConfig.playbackRate || 1))
     setupBackgroundOverlay()
+    video.addEventListener('canplay', revealVideo, { once: true })
     if (video.src !== new URL(videoConfig.src, location.href).href) {
       video.src = videoConfig.src
     }
+    if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) revealVideo()
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       video.play().catch(() => {})
     }

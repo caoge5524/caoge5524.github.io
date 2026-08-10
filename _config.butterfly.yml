@@ -219,8 +219,9 @@ mask:
 
 inject:
   head:
-    - <link rel="stylesheet" href="/css/custom.css?v=20260810-2">
+    - <link rel="preload" href="/img/background.jpg?v=20260810-2" as="image" fetchpriority="high">
+    - <link rel="stylesheet" href="/css/custom.css?v=20260810-3">
   bottom:
     - <script src="/js/site-config.js?v=20260810-2"></script>
-    - <script src="/js/media-player.js?v=20260810-2"></script>
-    - <script src="/js/custom.js?v=20260810-2"></script>
+    - <script src="/js/media-player.js?v=20260810-3"></script>
+    - <script src="/js/custom.js?v=20260810-3"></script>

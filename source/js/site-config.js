@@ -8,7 +8,7 @@ window.BLOG_CONFIG = {
     src: '/img/background.jpg?v=20260810-2'
   },
   backgroundVideo: {
-    enabled: false,
+    enabled: true,
     src: '/media/background.mp4?v=20260810-1',
     poster: '/img/background.jpg?v=20260810-2',
     playbackRate: 1,
